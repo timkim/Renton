@@ -46,6 +46,9 @@ function printUsage(){
 }
 
 function setup(theSrcDir){
+    if(!fs.existsSync('build')){
+        shell.mkdir('-p', 'build');
+    }
     shell.rm('-rf','build/*');
     shell.cp('-r', 'bin/*', 'build');
     shell.cp('-r', theSrcDir, 'build');
