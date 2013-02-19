@@ -1,0 +1,21 @@
+{
+  "name": "Renton",
+  "version": "0.0.0",
+  "description": "Cordova-BlackBerry and Webworks native custom extension builder",
+  "main": "Renton",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:timkim/Renton.git"
+  },
+  "keywords": [
+    "phonegap",
+    "Cordova",
+    "BlackBerry",
+    "WebWorks"
+  ],
+  "author": "Tim Kim",
+  "license": "apachev2",
+  "dependencies": {
+    "shelljs": "0.0.8"
+  }
+}

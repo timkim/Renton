@@ -1,0 +1,5 @@
+var config = {}
+
+config.bb10_sdk_path = "/Developer/SDKs/bb10.1_native"
+
+module.exports = config;
