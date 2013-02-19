@@ -18,37 +18,55 @@
 	under the License.
 */
 
-
-pluginArtifactName = process.argv[2]; // the file name of the .so that is generated in the device/simulator folders
-srcDir = process.argv[3]; // directory that contains the native plugin code
-destDir = process.argv[4]; // directory that contains the built .so dirs
-
 var fs            = require('fs'),
+    path          = require('path'),
     shell         = require('shelljs'),
-    config        = require('./config');
+    config        = require('./config'),
+    nopt          = require('nopt');
 
-function setup(){
-    shell.rm('-rf','build/*');
-    shell.cp('-r', 'bin/*', 'build');
-    shell.cp('-r', srcDir, 'build');
+var known_opts = { 'name' : String
+            , 'srcDir' : [String, path]
+            , 'destDir' : [String, path]
+            };
+            
+var cli_opts = nopt(known_opts);
+
+if(!cli_opts.name || !cli_opts.srcDir || !cli_opts.destDir){
+    printUsage();
+}else{  
+    setup(cli_opts.srcDir);
+    build(cli_opts.srcDir);
+    distribute(cli_opts.name, path.resolve(cli_opts.destDir));
 }
 
-function build(){
-    console.log('Building...');
+function printUsage(){
+    console.log('Renton is a tool to build BlackBerry 10 native extensions from the command line.');
+    console.log('Usage\n---------');
+    console.log('Renton --name <name> --srcDir <directory> --destDir <directory>');
+}
+
+function setup(theSrcDir){
+    shell.rm('-rf','build/*');
+    shell.cp('-r', 'bin/*', 'build');
+    shell.cp('-r', theSrcDir, 'build');
+}
+
+function build(theSrcDir){
+    console.log('Building src from ' + theSrcDir);
     shell.exec('cd build && source ' + config.bb10_sdk_path + '/bbndk-env.sh && make clean && make all', {silent: true});
     console.log('Done building');
 }
 
-function distribute(){
+function distribute(theName, theDestDir){
     console.log('Packaging...');
+
+    // rename .so file, copy it over to the device and simulator folders, then clean up the folder
+    shell.exec('cd build && mv arm/so.le-v7-g/build.so arm/so.le-v7-g/' + theName + '.so && mv x86/so-g/build.so x86/so-g/' + theName + '.so');
     shell.exec('cd build && mkdir device && mkdir simulator && cp arm/so.le-v7-g/*.so device && cp x86/so-g/*.so simulator');
-    console.log('Done packaging');
+    shell.exec('cd build && rm -r arm && rm -r x86 && rm common.mk && rm Makefile');
+    if(!fs.existsSync(theDestDir)){
+        shell.mkdir('-p', theDestDir);
+        shell.cp('-r', 'build/*', theDestDir);
+    }
+    console.log('Done packaging. Output lives at ' + theDestDir);
 }
-
-if(process.argv.length < 2){
-    
-}
-setup();
-build();
-distribute();
-

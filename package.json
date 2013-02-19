@@ -16,6 +16,7 @@
   "author": "Tim Kim",
   "license": "apachev2",
   "dependencies": {
+    "nopt": "1.0.x",
     "shelljs": "0.0.8"
   }
 }
