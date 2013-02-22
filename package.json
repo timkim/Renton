@@ -17,6 +17,10 @@
   "license": "apachev2",
   "dependencies": {
     "nopt": "1.0.x",
-    "shelljs": "0.0.8"
+    "shelljs": "0.0.8",
+    "osenv": "0.0.x"
+  },
+  "devDependencies": {
+    "nodeunit": "0.7.x"
   }
 }
