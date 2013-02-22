@@ -5,7 +5,7 @@ var fs = require('fs')
   , osenv = require('osenv')
   , test_dir = path.join(osenv.tmpdir(), 'cordovaEchoTest');
 
-var outputName = 'cordovaEchoJNext';
+var outputName = 'echoJnext';
 var outputDirectory = path.join(__dirname, 'cordovaEcho');
 
 exports.setUp = function(callback) {
